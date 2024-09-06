@@ -3,31 +3,44 @@ package no.hunt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ClientHandler {
+  private ObjectInputStream socketReader;
   
-  Socket clientSocket = new Socket();
+  private final Socket clientSocket;
   
   public ClientHandler(Socket clientSocket) {
     this.clientSocket = clientSocket;
   }
 
   public void run() {
-    handleClient(clientSocket);
+
     System.out.println(clientSocket.getRemoteSocketAddress());
+    try {
+      socketReader = new ObjectInputStream(clientSocket.getInputStream());
+      handleClient();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public void handleClient(Socket clientSocket) {
-    String clientCommand = recieveOneCommand(clientSocket);
+
+  public void handleClient() {
+    String clientCommand = recieveOneCommand();
   }
 
-  private String recieveOneCommand(Socket clientSocket) {
+  private String recieveOneCommand() {
     String clientCommand = "";
-    try (BufferedReader socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-      clientCommand = socketReader.readLine();
+    try {
+      System.out.println("write here");
+        clientCommand = (String) socketReader.readObject();
+      System.out.println(clientCommand);
     } catch (IOException e) {
       System.out.println("Error reading from client: " + e.getMessage());
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
     }
     return clientCommand;
   }
