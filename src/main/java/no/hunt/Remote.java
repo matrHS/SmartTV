@@ -70,6 +70,7 @@ public class Remote {
     String response = null;
     try {
       response = socketReader.readLine();
+
     } catch (IOException e) {
       System.err.println("Error while receiving data from the server: " + e.getMessage());
     }
