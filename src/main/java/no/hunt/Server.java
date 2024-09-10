@@ -3,6 +3,7 @@ package no.hunt;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
 
 /**
  * Represents the server
@@ -11,19 +12,33 @@ public class Server {
   public static final int TCP_PORT = 1234;
   private ServerSocket serverSocket;
   private Socket clientSocket;
+  private SmartTv tv;
 
   public static void main(String[] args) {
     Server server = new Server();
     server.run();
   }
 
-  
+
   private void run() {
+    this.tv = new SmartTv();
     if (startListening()) {
-      while (true) {
-        Socket clientSocket = acceptNextClient();
-        ClientHandler clientHandler = new ClientHandler(clientSocket);
-        clientHandler.run();
+      Socket clientSocket = acceptNextClient();
+      ClientHandler clientHandler = new ClientHandler(clientSocket);
+      clientHandler.run();
+      boolean quit = false;
+      while (!quit) {
+        String command = clientHandler.handleClient();
+
+        switch (command) {
+          case "power":
+            tv.powerButton();
+            System.out.println("Power button pressed");
+            break;
+          case "quit":
+            quit = true;
+            break;
+        }
       }
     }
   }

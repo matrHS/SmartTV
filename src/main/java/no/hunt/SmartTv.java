@@ -2,8 +2,8 @@ package no.hunt;
 
 public class SmartTv {
 
-  private boolean OnOff = false;
   private final String[] channels = {"NRK1", "NRK2", "TV2"};
+  private boolean OnOff = false;
   private int currentChannel = 0;
 
   /**

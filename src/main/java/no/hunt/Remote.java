@@ -2,28 +2,23 @@ package no.hunt;
 
 import static no.hunt.Server.TCP_PORT;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Remote {
   private static final String SERVER_HOST = "localhost";
   private Socket socket;
-//  private BufferedReader socketReader;
+  //  private BufferedReader socketReader;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
-  
+
   private InputStream inputStream;
   private ObjectInputStream objectInputStream;
-  
 
 
   public static void main(String[] args) {
@@ -32,9 +27,14 @@ public class Remote {
   }
 
   private void run() {
-    if (connect()){
-      
-      sendAndReceive("hello");
+    if (connect()) {
+      Scanner scanner = new Scanner(System.in);
+      String command ="";
+      while(!command.equals( "quit")) {
+        command = scanner.nextLine();
+        sendAndReceive(command);
+      }
+
     }
   }
 
@@ -44,7 +44,7 @@ public class Remote {
       socket = new Socket(SERVER_HOST, TCP_PORT);
       inputStream = socket.getInputStream();
       objectInputStream = new ObjectInputStream(inputStream);
-      
+
       outputStream = socket.getOutputStream();
       objectWriter = new ObjectOutputStream(outputStream);
       System.out.println("connection established");
@@ -52,8 +52,9 @@ public class Remote {
     } catch (IOException e) {
       System.out.println("connection failed");
     }
-    return  success;
+    return success;
   }
+
   private void sendAndReceive(String command) {
     if (sendToServer(command)) {
       String response = receiveOneLineFromServer();
@@ -62,6 +63,7 @@ public class Remote {
       }
     }
   }
+
   private void disconnect() {
     try {
       if (socket != null) {
@@ -74,6 +76,7 @@ public class Remote {
       System.err.println("Could not close the socket: " + e.getMessage());
     }
   }
+
   private String receiveOneLineFromServer() {
     String response = null;
     try {
