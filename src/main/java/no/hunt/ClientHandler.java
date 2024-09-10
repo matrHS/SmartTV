@@ -2,12 +2,15 @@ package no.hunt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ClientHandler {
-  private ObjectInputStream socketReader;
+  private BufferedReader socketReader;
+  private InputStream inputStream;
+  private ObjectInputStream objectInputStream;
   
   private final Socket clientSocket;
   
@@ -19,7 +22,9 @@ public class ClientHandler {
 
     System.out.println(clientSocket.getRemoteSocketAddress());
     try {
-      socketReader = new ObjectInputStream(clientSocket.getInputStream());
+      socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+      inputStream = clientSocket.getInputStream();
+      objectInputStream = new ObjectInputStream(inputStream);
       handleClient();
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -35,7 +40,7 @@ public class ClientHandler {
     String clientCommand = "";
     try {
       System.out.println("write here");
-        clientCommand = (String) socketReader.readObject();
+        clientCommand = objectInputStream.readObject().toString();
       System.out.println(clientCommand);
     } catch (IOException e) {
       System.out.println("Error reading from client: " + e.getMessage());
