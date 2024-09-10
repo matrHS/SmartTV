@@ -3,7 +3,6 @@ package no.hunt;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLOutput;
 
 /**
  * Represents the server
@@ -18,7 +17,6 @@ public class Server {
     Server server = new Server();
     server.run();
   }
-
 
   private void run() {
     this.tv = new SmartTv();

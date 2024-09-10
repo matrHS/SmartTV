@@ -1,7 +1,12 @@
 package no.hunt;
 
+/**
+ * Represents a smart TV
+ */
 public class SmartTv {
 
+
+  private boolean onOff = false;
   private final String[] channels = {"NRK1", "NRK2", "TV2"};
   private boolean OnOff = false;
   private int currentChannel = 0;
@@ -10,10 +15,10 @@ public class SmartTv {
    * Turn the TV on or off
    */
   public void powerButton() {
-    if (OnOff) {
-      OnOff = false;
+    if (onOff) {
+      onOff = false;
     } else {
-      OnOff = true;
+      onOff = true;
     }
   }
 
@@ -23,7 +28,7 @@ public class SmartTv {
    * @return the number of available channels on tv
    */
   public int getChannels() {
-    if (OnOff) {
+    if (onOff) {
       return channels.length;
     } else {
       return -1;
@@ -36,7 +41,7 @@ public class SmartTv {
    * @return The current channel
    */
   public int getCurrentChannel() {
-    if (OnOff) {
+    if (onOff) {
       return currentChannel;
     } else {
       return -1;
@@ -47,7 +52,7 @@ public class SmartTv {
    * Change the current channel on the TV
    */
   public void changeChannel(int channelNumber) {
-    if (OnOff) {
+    if (onOff) {
       if (channelNumber >= 0 && channelNumber < channels.length) {
         currentChannel = channelNumber;
       }
@@ -58,7 +63,7 @@ public class SmartTv {
    * Increase the current channel on the TV by one channel
    */
   public void changeChannelUp() {
-    if (OnOff) {
+    if (onOff) {
       currentChannel++;
       if (currentChannel >= channels.length) {
         currentChannel = 0;
@@ -70,7 +75,7 @@ public class SmartTv {
    * Decrease the current channel on the TV by one channel
    */
   public void changeChannelDown() {
-    if (OnOff) {
+    if (onOff) {
       currentChannel--;
       if (currentChannel > 0) {
         currentChannel = channels.length - 1;
@@ -84,7 +89,7 @@ public class SmartTv {
    * @return The current channel name
    */
   public String getCurrentChannelName() {
-    if (OnOff) {
+    if (onOff) {
       return channels[currentChannel];
     } else {
       return null;
