@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class Remote {
   private static final String SERVER_HOST = "localhost";
   private Socket socket;
-  //  private BufferedReader socketReader;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
 
@@ -26,6 +25,9 @@ public class Remote {
     client.run();
   }
 
+  /**
+   * Run the client
+   */
   private void run() {
     if (connect()) {
       Scanner scanner = new Scanner(System.in);
@@ -38,6 +40,10 @@ public class Remote {
     }
   }
 
+  /**
+   * Connect to the server, and set up the input and output streams.
+   * @return True if the connection is successfully established, false otherwise.
+   */
   private boolean connect() {
     boolean success = false;
     try {
@@ -55,6 +61,10 @@ public class Remote {
     return success;
   }
 
+  /**
+   * Send a command to the server and receive the response.
+   * @param command The command to send.
+   */
   private void sendAndReceive(String command) {
     if (sendToServer(command)) {
       String response = receiveOneLineFromServer();
@@ -77,6 +87,11 @@ public class Remote {
     }
   }
 
+  /**
+   * Receive a line from the server.
+   * We assume that the connection is already established.
+   * @return
+   */
   private String receiveOneLineFromServer() {
     String response = null;
     try {

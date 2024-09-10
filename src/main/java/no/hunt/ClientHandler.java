@@ -7,6 +7,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Represents the client handler
+ */
 public class ClientHandler {
   private final Socket clientSocket;
   private OutputStream outputStream;
@@ -14,6 +17,10 @@ public class ClientHandler {
   private InputStream inputStream;
   private ObjectInputStream objectInputStream;
 
+  /**
+   * Constructor for the ClientHandler
+   * @param clientSocket
+   */
   public ClientHandler(Socket clientSocket) {
     this.clientSocket = clientSocket;
   }
@@ -32,11 +39,18 @@ public class ClientHandler {
     }
   }
 
-
+  /**
+   * Handle the client.
+   * @return The command from the client.
+   */
   public String handleClient() {
     return recieveOneCommand();
   }
 
+  /**
+   * Recieve one command from the client.
+   * @return
+   */
   private String recieveOneCommand() {
     String clientCommand = "";
     try {
@@ -52,6 +66,10 @@ public class ClientHandler {
     return clientCommand;
   }
 
+  /**
+   * Send a response to the client.
+   * @param response
+   */
   private void sendToClient(String response) {
     try {
       objectOutputStream.writeObject(response);
