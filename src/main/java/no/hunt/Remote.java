@@ -4,7 +4,9 @@ import static no.hunt.Server.TCP_PORT;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -18,6 +20,9 @@ public class Remote {
 //  private BufferedReader socketReader;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
+  
+  private InputStream inputStream;
+  private ObjectInputStream objectInputStream;
   
 
 
@@ -37,7 +42,9 @@ public class Remote {
     boolean success = false;
     try {
       socket = new Socket(SERVER_HOST, TCP_PORT);
-//      socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      inputStream = socket.getInputStream();
+      objectInputStream = new ObjectInputStream(inputStream);
+      
       outputStream = socket.getOutputStream();
       objectWriter = new ObjectOutputStream(outputStream);
       System.out.println("connection established");
@@ -69,6 +76,13 @@ public class Remote {
   }
   private String receiveOneLineFromServer() {
     String response = null;
+    try {
+      response = objectInputStream.readObject().toString();
+    } catch (IOException e) {
+      System.err.println("Error reading from server: " + e.getMessage());
+    } catch (ClassNotFoundException e) {
+      System.err.println("Error reading from server: " + e.getMessage());
+    }
     return response;
   }
 
