@@ -69,7 +69,6 @@ public class Remote {
   }
   private String receiveOneLineFromServer() {
     String response = null;
-    
     return response;
   }
 
