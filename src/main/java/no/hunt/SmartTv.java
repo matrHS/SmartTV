@@ -8,8 +8,7 @@ public class SmartTv {
 
   private boolean onOff = false;
   private final String[] channels = {"NRK1", "NRK2", "TV2"};
-  private boolean OnOff = false;
-  private int currentChannel = 0;
+  private int currentChannel = 1;
 
   /**
    * Turn the TV on or off
@@ -94,5 +93,9 @@ public class SmartTv {
     } else {
       return null;
     }
+  }
+
+  public boolean isOn() {
+    return this.onOff;
   }
 }

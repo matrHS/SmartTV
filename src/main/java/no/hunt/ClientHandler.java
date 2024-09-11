@@ -54,10 +54,9 @@ public class ClientHandler {
   private String recieveOneCommand() {
     String clientCommand = "";
     try {
-      System.out.println("write here");
       clientCommand = objectInputStream.readObject().toString();
       System.out.println(clientCommand);
-      sendToClient("response");
+      //sendToClient("OK");
     } catch (IOException e) {
       System.out.println("Error reading from client: " + e.getMessage());
     } catch (ClassNotFoundException e) {
@@ -70,7 +69,7 @@ public class ClientHandler {
    * Send a response to the client.
    * @param response
    */
-  private void sendToClient(String response) {
+  public void sendToClient(String response) {
     try {
       objectOutputStream.writeObject(response);
     } catch (IOException e) {

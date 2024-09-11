@@ -20,8 +20,8 @@ public class Server {
 
   /**
    * Run the server, and handle the client.
+   * !!! MUST RETURN A RESPONSE TO THE CLIENT !!!
    */
-
   private void run() {
     this.tv = new SmartTv();
     if (startListening()) {
@@ -29,22 +29,52 @@ public class Server {
       ClientHandler clientHandler = new ClientHandler(clientSocket);
       clientHandler.run();
       boolean quit = false;
-      while (!quit) {
-        String command = clientHandler.handleClient();
+        while (!quit) {
+          if (tv.isOn()) {
+            String command = clientHandler.handleClient().toLowerCase().strip();
+            switch (command) {
+              case "is on":
+                this.isOn(clientHandler);
+                break;
+              case "get channels":
+                clientHandler.sendToClient("The TV has " + tv.getChannels() + " channels");
+                break;
+              case "quit":
+                quit = true;
+                break;
+                case "power off":
+                tv.powerButton();
+                clientHandler.sendToClient("The TV is now off");
+                break;
+              case "current channel":
+                clientHandler.sendToClient("The current channel is " + tv.getCurrentChannel());
+                break;
 
-        switch (command) {
-          case "power":
-            tv.powerButton();
-            System.out.println("Power button pressed");
-            break;
-          case "quit":
-            quit = true;
-            break;
-        }
+              default:
+                clientHandler.sendToClient("Unknown command");
+                break;
+            }
+          }else{
+            String command = clientHandler.handleClient().toLowerCase().strip();
+            if (command.equals("power")){
+                tv.powerButton();
+                clientHandler.sendToClient("The TV is now on");
+
+            }else{
+              clientHandler.sendToClient("The TV is off");
+
+            }
+      }
       }
     }
   }
-
+private void isOn(ClientHandler handler) {
+    if (tv.isOn()) {
+      handler.sendToClient("The TV is on");
+    } else {
+      handler.sendToClient("The TV is off");
+    }
+}
   /**
    * Accepts the connecting client.
    *
