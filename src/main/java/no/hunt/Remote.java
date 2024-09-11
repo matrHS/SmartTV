@@ -10,16 +10,23 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * Implements a remote client control for the smart TV server
+ */
 public class Remote {
   private static final String SERVER_HOST = "localhost";
   private Socket socket;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
-
   private InputStream inputStream;
   private ObjectInputStream objectInputStream;
 
 
+  /**
+   * Main method for the remote
+   *
+   * @param args Command line arguments
+   */
   public static void main(String[] args) {
     Remote client = new Remote();
     client.run();
@@ -42,6 +49,7 @@ public class Remote {
 
   /**
    * Connect to the server, and set up the input and output streams.
+   *
    * @return True if the connection is successfully established, false otherwise.
    */
   private boolean connect() {
@@ -63,6 +71,7 @@ public class Remote {
 
   /**
    * Send a command to the server and receive the response.
+   *
    * @param command The command to send.
    */
   private void sendAndReceive(String command) {
@@ -74,6 +83,9 @@ public class Remote {
     }
   }
 
+  /**
+   * Disconnect from the server.
+   */
   private void disconnect() {
     try {
       if (socket != null) {
@@ -90,7 +102,8 @@ public class Remote {
   /**
    * Receive a line from the server.
    * We assume that the connection is already established.
-   * @return
+   *
+   * @return The received line, or null on error.
    */
   private String receiveOneLineFromServer() {
     String response = null;

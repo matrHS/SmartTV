@@ -19,7 +19,8 @@ public class ClientHandler {
 
   /**
    * Constructor for the ClientHandler
-   * @param clientSocket
+   *
+   * @param clientSocket The client socket
    */
   public ClientHandler(Socket clientSocket) {
     this.clientSocket = clientSocket;
@@ -41,6 +42,7 @@ public class ClientHandler {
 
   /**
    * Handle the client.
+   *
    * @return The command from the client.
    */
   public String handleClient() {
@@ -48,8 +50,9 @@ public class ClientHandler {
   }
 
   /**
-   * Recieve one command from the client.
-   * @return
+   * Receive one command from the client.
+   *
+   * @return The command from the client.
    */
   private String recieveOneCommand() {
     String clientCommand = "";
@@ -68,7 +71,8 @@ public class ClientHandler {
 
   /**
    * Send a response to the client.
-   * @param response
+   *
+   * @param response The response to send.
    */
   private void sendToClient(String response) {
     try {

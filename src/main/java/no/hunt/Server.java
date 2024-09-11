@@ -21,7 +21,6 @@ public class Server {
   /**
    * Run the server, and handle the client.
    */
-
   private void run() {
     this.tv = new SmartTv();
     if (startListening()) {

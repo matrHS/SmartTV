@@ -5,10 +5,9 @@ package no.hunt;
  */
 public class SmartTv {
 
-
+  public static final int TCP_PORT = 1234;
   private boolean onOff = false;
   private final String[] channels = {"NRK1", "NRK2", "TV2"};
-  private boolean OnOff = false;
   private int currentChannel = 0;
 
   /**
