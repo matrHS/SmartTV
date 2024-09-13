@@ -8,12 +8,17 @@ import java.net.Socket;
  * Represents the server
  */
 public class Server {
-  public static final int TCP_PORT = 1234;
+  public static int TCP_PORT;
   private ServerSocket serverSocket;
   private Socket clientSocket;
   private SmartTv tv;
 
   public static void main(String[] args) {
+    if(args.length > 0){
+      TCP_PORT = Integer.parseInt(args[0]);
+    }else {
+      TCP_PORT = 1238;
+    }
     Server server = new Server();
     server.run();
   }

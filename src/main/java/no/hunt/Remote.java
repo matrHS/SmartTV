@@ -14,7 +14,8 @@ import java.util.Scanner;
  * Implements a remote client control for the smart TV server
  */
 public class Remote {
-  private static final String SERVER_HOST = "localhost";
+  private static String SERVER_HOST = "";
+  private static int TCP_PORT;
   private Socket socket;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
@@ -28,8 +29,15 @@ public class Remote {
    * @param args Command line arguments
    */
   public static void main(String[] args) {
-    Remote client = new Remote();
-    client.run();
+    if(args.length > 0){
+      SERVER_HOST = args[0];
+      TCP_PORT = Integer.parseInt(args[1]);
+      Remote client = new Remote();
+      client.run();
+    }else {
+        System.out.println("Usage: java Remote <server-host> <port>");
+    }
+
   }
 
   /**
@@ -55,7 +63,7 @@ public class Remote {
   private boolean connect() {
     boolean success = false;
     try {
-      socket = new Socket(SERVER_HOST, TCP_PORT);
+      socket = new Socket(this.SERVER_HOST, this.TCP_PORT);
       inputStream = socket.getInputStream();
       objectInputStream = new ObjectInputStream(inputStream);
 
