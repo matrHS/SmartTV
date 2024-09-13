@@ -30,8 +30,8 @@ public class Server {
       clientHandler.run();
       boolean quit = false;
         while (!quit) {
+          String command = clientHandler.handleClient().toLowerCase().strip();
           if (tv.isOn()) {
-            String command = clientHandler.handleClient().toLowerCase().strip();
             switch (command) {
               case "is on":
                 this.isOn(clientHandler);
@@ -42,20 +42,34 @@ public class Server {
               case "quit":
                 quit = true;
                 break;
-                case "power off":
+              case "power off":
                 tv.powerButton();
                 clientHandler.sendToClient("The TV is now off");
                 break;
               case "current channel":
-                clientHandler.sendToClient("The current channel is " + tv.getCurrentChannel());
+                clientHandler.sendToClient("The current channel is " +
+                                           tv.getCurrentChannel());
                 break;
-
+              case "channel name":
+                clientHandler.sendToClient("The current channel is " +
+                                           tv.getCurrentChannel() + " : " +
+                                           tv.getCurrentChannelName());
+              case "channel up":
+                tv.changeChannelUp();
+                clientHandler.sendToClient("The current channel is " +
+                                           tv.getCurrentChannel() + " : " +
+                                           tv.getCurrentChannelName());
+              case "channel down":
+                tv.changeChannelDown();
+                clientHandler.sendToClient("The current channel is " +
+                                           tv.getCurrentChannel() + " : " +
+                                           tv.getCurrentChannelName());
+                break;
               default:
                 clientHandler.sendToClient("Unknown command");
                 break;
             }
           }else{
-            String command = clientHandler.handleClient().toLowerCase().strip();
             if (command.equals("power")){
                 tv.powerButton();
                 clientHandler.sendToClient("The TV is now on");

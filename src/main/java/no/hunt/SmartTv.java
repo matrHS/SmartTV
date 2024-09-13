@@ -5,12 +5,10 @@ package no.hunt;
  */
 public class SmartTv {
 
-  public static final int TCP_PORT = 1234;
+  public static final int TCP_PORT = 1238;
   private boolean onOff = false;
-  private final String[] channels = {"NRK1", "NRK2", "TV2"};
-
-  private int currentChannel = 1;
-
+  private final String[] channels = {"NRK1", "NRK2", "TV2", "TV Norge", "TV3", "Discovery", "National Geographic"};
+  private int currentChannel = 0;
 
   /**
    * Turn the TV on or off
@@ -43,7 +41,7 @@ public class SmartTv {
    */
   public int getCurrentChannel() {
     if (onOff) {
-      return currentChannel;
+      return currentChannel+1;
     } else {
       return -1;
     }
@@ -65,12 +63,13 @@ public class SmartTv {
    */
   public void changeChannelUp() {
     if (onOff) {
-      currentChannel++;
-      if (currentChannel >= channels.length) {
+      this.currentChannel += 1;
+      if (currentChannel > channels.length) {
         currentChannel = 0;
       }
     }
   }
+
 
   /**
    * Decrease the current channel on the TV by one channel
@@ -78,7 +77,7 @@ public class SmartTv {
   public void changeChannelDown() {
     if (onOff) {
       currentChannel--;
-      if (currentChannel > 0) {
+      if (currentChannel < 0) {
         currentChannel = channels.length - 1;
       }
     }
