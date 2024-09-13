@@ -5,7 +5,6 @@ package no.hunt;
  */
 public class SmartTv {
 
-  public static final int TCP_PORT = 1238;
   private boolean onOff = false;
   private final String[] channels = {"NRK1", "NRK2", "TV2", "TV Norge", "TV3", "Discovery", "National Geographic"};
   private int currentChannel = 0;
@@ -14,11 +13,7 @@ public class SmartTv {
    * Turn the TV on or off
    */
   public void powerButton() {
-    if (onOff) {
-      onOff = false;
-    } else {
-      onOff = true;
-    }
+    onOff = !onOff;
   }
 
   /**
@@ -96,6 +91,11 @@ public class SmartTv {
     }
   }
 
+  /**
+   * Check if the TV is on
+   *
+   * @return True if the TV is on, false otherwise
+   */
   public boolean isOn() {
     return this.onOff;
   }

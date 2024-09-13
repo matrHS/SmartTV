@@ -1,11 +1,8 @@
 package no.hunt;
 
-import static java.lang.Integer.parseInt;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * Represents the server
@@ -167,7 +164,7 @@ public class Server {
     menu.append("+-------------------------------------------------+ \n");
     menu.append("|                        MENU                     | \n");
     menu.append("+-------------------------------------------------+ \n");
-    menu.append("| power / power off                               | \n");
+    menu.append("| power                                           | \n");
     menu.append("| channel name                                    | \n");
     menu.append("| channel number                                  | \n");
     menu.append("| channel up                                      | \n");
