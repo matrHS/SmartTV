@@ -54,11 +54,13 @@ public class Server {
                 clientHandler.sendToClient("The current channel is " +
                                            tv.getCurrentChannel() + " : " +
                                            tv.getCurrentChannelName());
+                break;
               case "channel up":
                 tv.changeChannelUp();
                 clientHandler.sendToClient("The current channel is " +
                                            tv.getCurrentChannel() + " : " +
                                            tv.getCurrentChannelName());
+                break;
               case "channel down":
                 tv.changeChannelDown();
                 clientHandler.sendToClient("The current channel is " +
