@@ -1,8 +1,11 @@
 package no.hunt;
 
+import static java.lang.Integer.parseInt;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * Represents the server
@@ -33,6 +36,7 @@ public class Server {
       Socket clientSocket = acceptNextClient();
       ClientHandler clientHandler = new ClientHandler(clientSocket);
       clientHandler.run();
+      displayMenu();
       boolean quit = false;
         while (!quit) {
           String[] commands = clientHandler.handleClient();
@@ -44,9 +48,8 @@ public class Server {
                 clientHandler.sendToClient("The TV is now on");
             }else{
               clientHandler.sendToClient("The TV is off");
-
             }
-      }
+        }
       }
     }
   }
@@ -71,6 +74,9 @@ public class Server {
         break;
       case "status":
         this.isOn(clientHandler);
+        break;
+      case "options":
+        clientHandler.sendToClient(this.displayMenu());
         break;
       default:
         clientHandler.sendToClient("Unknown command");
@@ -150,6 +156,28 @@ public class Server {
       System.out.println("Could not listen on port " + TCP_PORT + " " + e.getMessage());
     }
     return success;
+  }
+
+  /**
+   * Display the menu
+   */
+  private String displayMenu() {
+    StringBuilder menu = new StringBuilder();
+    menu.append("\n");
+    menu.append("+-------------------------------------------------+ \n");
+    menu.append("|                        MENU                     | \n");
+    menu.append("+-------------------------------------------------+ \n");
+    menu.append("| power / power off                               | \n");
+    menu.append("| channel name                                    | \n");
+    menu.append("| channel number                                  | \n");
+    menu.append("| channel up                                      | \n");
+    menu.append("| channel down                                    | \n");
+    menu.append("| channel select <number>                         | \n");
+    menu.append("| status                                          | \n");
+    menu.append("| options                                         | \n");
+    menu.append("| quit                                            | \n");
+    menu.append("+-------------------------------------------------+ \n");
+    return menu.toString();
   }
 
 }
