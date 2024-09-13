@@ -53,7 +53,7 @@ public class SmartTv {
   public void changeChannel(int channelNumber) {
     if (onOff) {
       if (channelNumber >= 0 && channelNumber < channels.length) {
-        currentChannel = channelNumber;
+        currentChannel = channelNumber-1;
       }
     }
   }

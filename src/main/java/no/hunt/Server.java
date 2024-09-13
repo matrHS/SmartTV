@@ -30,52 +30,13 @@ public class Server {
       clientHandler.run();
       boolean quit = false;
         while (!quit) {
-          String command = clientHandler.handleClient().toLowerCase().strip();
+          String[] commands = clientHandler.handleClient();
           if (tv.isOn()) {
-            switch (command) {
-              case "is on":
-                this.isOn(clientHandler);
-                break;
-              case "get channels":
-                clientHandler.sendToClient("The TV has " + tv.getChannels() + " channels");
-                break;
-              case "quit":
-                quit = true;
-                break;
-              case "power off":
-                tv.powerButton();
-                clientHandler.sendToClient("The TV is now off");
-                break;
-              case "current channel":
-                clientHandler.sendToClient("The current channel is " +
-                                           tv.getCurrentChannel());
-                break;
-              case "channel name":
-                clientHandler.sendToClient("The current channel is " +
-                                           tv.getCurrentChannel() + " : " +
-                                           tv.getCurrentChannelName());
-                break;
-              case "channel up":
-                tv.changeChannelUp();
-                clientHandler.sendToClient("The current channel is " +
-                                           tv.getCurrentChannel() + " : " +
-                                           tv.getCurrentChannelName());
-                break;
-              case "channel down":
-                tv.changeChannelDown();
-                clientHandler.sendToClient("The current channel is " +
-                                           tv.getCurrentChannel() + " : " +
-                                           tv.getCurrentChannelName());
-                break;
-              default:
-                clientHandler.sendToClient("Unknown command");
-                break;
-            }
+            quit = mainSwitch(commands, clientHandler);
           }else{
-            if (command.equals("power")){
+            if (commands[0].equals("power")){
                 tv.powerButton();
                 clientHandler.sendToClient("The TV is now on");
-
             }else{
               clientHandler.sendToClient("The TV is off");
 
@@ -84,7 +45,72 @@ public class Server {
       }
     }
   }
-private void isOn(ClientHandler handler) {
+
+
+  private boolean mainSwitch(String[] commands, ClientHandler clientHandler) {
+    boolean quit = false;
+    switch (commands[0]) {
+      case "channel":
+        if (commands.length > 1) {
+          this.channelSwitch(commands, clientHandler);
+        } else {
+          clientHandler.sendToClient("missing parameter for channel command");
+        }
+        break;
+      case "quit":
+        quit = true;
+        break;
+      case "power":
+        tv.powerButton();
+        clientHandler.sendToClient("The TV is now off");
+        break;
+      case "status":
+        this.isOn(clientHandler);
+        break;
+      default:
+        clientHandler.sendToClient("Unknown command");
+        break;
+    }
+    return quit;
+  }
+  private void channelSwitch(String[] commands, ClientHandler clientHandler) {
+    switch (commands[1]) {
+      case "number":
+        clientHandler.sendToClient("The TV has " + tv.getChannels() + " channels");
+        break;
+      case "name":
+        clientHandler.sendToClient("The current channel is " +
+            tv.getCurrentChannel() + " : " +
+            tv.getCurrentChannelName());
+        break;
+      case "up":
+        tv.changeChannelUp();
+        clientHandler.sendToClient("The current channel is " +
+            tv.getCurrentChannel() + " : " +
+            tv.getCurrentChannelName());
+        break;
+      case "down":
+        tv.changeChannelDown();
+        clientHandler.sendToClient("The current channel is " +
+            tv.getCurrentChannel() + " : " +
+            tv.getCurrentChannelName());
+        break;
+      case "select":
+        if(commands.length > 2) {
+          int channel = Integer.parseInt(commands[2]);
+          tv.changeChannel(channel);
+            clientHandler.sendToClient("The current channel is " +
+                tv.getCurrentChannel() + " : " +
+                tv.getCurrentChannelName());
+        }
+        break;
+      default:
+        clientHandler.sendToClient(tv.getCurrentChannelName());
+        break;
+    }
+  }
+
+  private void isOn(ClientHandler handler) {
     if (tv.isOn()) {
       handler.sendToClient("The TV is on");
     } else {

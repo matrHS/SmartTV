@@ -45,7 +45,7 @@ public class ClientHandler {
    *
    * @return The command from the client.
    */
-  public String handleClient() {
+  public String[] handleClient() {
     return recieveOneCommand();
   }
 
@@ -54,18 +54,21 @@ public class ClientHandler {
    *
    * @return The command from the client.
    */
-  private String recieveOneCommand() {
+  private String[] recieveOneCommand() {
     String clientCommand = "";
+    String[] args = null;
     try {
       clientCommand = objectInputStream.readObject().toString();
       System.out.println(clientCommand);
-      //sendToClient("OK");
+
+      clientCommand = clientCommand.toLowerCase().strip();
+      args = clientCommand.split(" ");
     } catch (IOException e) {
       System.out.println("Error reading from client: " + e.getMessage());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-    return clientCommand;
+    return args;
   }
 
   /**
