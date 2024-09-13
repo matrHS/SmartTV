@@ -1,12 +1,14 @@
 package no.hunt;
 
-import static no.hunt.Server.TCP_PORT;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -15,8 +17,8 @@ import java.util.Scanner;
  */
 public class Remote {
   private static String SERVER_HOST = "";
-  private static int TCP_PORT;
-  private Socket socket;
+  private static int UDP_PORT = 1234;
+  private DatagramSocket udpSocket;
   private OutputStream outputStream;
   private ObjectOutputStream objectWriter;
   private InputStream inputStream;
@@ -29,14 +31,8 @@ public class Remote {
    * @param args Command line arguments
    */
   public static void main(String[] args) {
-    if(args.length > 0){
-      SERVER_HOST = args[0];
-      TCP_PORT = Integer.parseInt(args[1]);
       Remote client = new Remote();
       client.run();
-    }else {
-        System.out.println("Usage: java Remote <server-host> <port>");
-    }
 
   }
 
@@ -90,7 +86,20 @@ public class Remote {
       }
     }
   }
+  private boolean sendToServer(String message) {
+    boolean sent = false;
+    try {
+      byte[] dataToSend = message.getBytes();
 
+      DatagramPacket packetToSend = new DatagramPacket(dataToSend, 0, dataToSend.length,
+          serverIp, UDP_PORT);
+      udpSocket.send(packetToSend);
+      sent = true;
+    } catch (IOException e) {
+      System.err.println("Error while sending the message: " + e.getMessage());
+    }
+    return sent;
+  }
   /**
    * Disconnect from the server.
    */

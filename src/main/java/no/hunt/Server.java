@@ -3,6 +3,8 @@ package no.hunt;
 import static java.lang.Integer.parseInt;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -11,17 +13,11 @@ import java.util.Scanner;
  * Represents the server
  */
 public class Server {
-  public static int TCP_PORT;
-  private ServerSocket serverSocket;
-  private Socket clientSocket;
+  public static int UDP_PORT = 1234;
+private DatagramSocket udpSocket;
   private SmartTv tv;
 
   public static void main(String[] args) {
-    if(args.length > 0){
-      TCP_PORT = Integer.parseInt(args[0]);
-    }else {
-      TCP_PORT = 1238;
-    }
     Server server = new Server();
     server.run();
   }
@@ -32,9 +28,9 @@ public class Server {
    */
   private void run() {
     this.tv = new SmartTv();
-    if (startListening()) {
-      Socket clientSocket = acceptNextClient();
-      ClientHandler clientHandler = new ClientHandler(clientSocket);
+    if (openListeningSocket()) {
+      DatagramPacket clientDatagram = receiveClientDatagram();
+      ClientHandler clientHandler = new ClientHandler(udpSocket, clientDatagram);
       clientHandler.run();
       displayMenu();
       boolean quit = false;
@@ -52,6 +48,19 @@ public class Server {
         }
       }
     }
+  }
+
+  private boolean openListeningSocket() {
+    boolean success = false;
+    try {
+      udpSocket = new DatagramSocket(UDP_PORT);
+      System.out.println("Server listening on port " + UDP_PORT);
+      success = true;
+    } catch (IOException e) {
+      System.err.println("Could not open a listening socket on port " + UDP_PORT
+          + ", reason: " + e.getMessage());
+    }
+    return success;
   }
 
 
@@ -133,7 +142,7 @@ public class Server {
    *
    * @return The connected socket.
    */
-  private Socket acceptNextClient() {
+ /* private Socket acceptNextClient() {
     try {
       clientSocket = serverSocket.accept();
     } catch (IOException e) {
@@ -141,12 +150,14 @@ public class Server {
     }
     return clientSocket;
   }
+  */
 
   /**
    * Open a TCP listening socket.
    *
    * @return true on success, false on error
    */
+  /*
   private boolean startListening() {
     boolean success = false;
     try {
@@ -156,6 +167,20 @@ public class Server {
       System.out.println("Could not listen on port " + TCP_PORT + " " + e.getMessage());
     }
     return success;
+  }
+
+   */
+
+  private DatagramPacket receiveClientDatagram() {
+    byte[] receivedData = new byte[200];
+    DatagramPacket clientDatagram = new DatagramPacket(receivedData, receivedData.length);
+    try {
+      udpSocket.receive(clientDatagram);
+    } catch (IOException e) {
+      System.err.println("Error while receiving client datagram: " + e.getMessage());
+      clientDatagram = null;
+    }
+    return clientDatagram;
   }
 
   /**

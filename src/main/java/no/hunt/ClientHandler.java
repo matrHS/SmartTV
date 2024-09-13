@@ -5,13 +5,16 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Represents the client handler
  */
 public class ClientHandler {
-  private final Socket clientSocket;
+  private final DatagramSocket clientSocket;
+  private final DatagramPacket clientDatagram;
   private OutputStream outputStream;
   private ObjectOutputStream objectOutputStream;
   private InputStream inputStream;
@@ -22,22 +25,22 @@ public class ClientHandler {
    *
    * @param clientSocket The client socket
    */
-  public ClientHandler(Socket clientSocket) {
+  public ClientHandler(DatagramSocket clientSocket, DatagramPacket packet) {
     this.clientSocket = clientSocket;
+    this.clientDatagram = packet;
+    System.out.println("UDP datagram received from " + clientDatagram.getAddress()
+        + ", port " + clientDatagram.getPort());
   }
 
   public void run() {
 
-    System.out.println(clientSocket.getRemoteSocketAddress());
-    try {
-      outputStream = clientSocket.getOutputStream();
-      objectOutputStream = new ObjectOutputStream(outputStream);
+    System.out.println(extractClientCommand() );
 
-      inputStream = clientSocket.getInputStream();
-      objectInputStream = new ObjectInputStream(inputStream);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  }
+
+  private String extractClientCommand() {
+    return new String(clientDatagram.getData(), 0, clientDatagram.getLength(),
+        StandardCharsets.UTF_8);
   }
 
   /**
